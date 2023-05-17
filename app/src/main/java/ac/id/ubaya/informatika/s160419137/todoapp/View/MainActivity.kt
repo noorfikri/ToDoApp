@@ -1,5 +1,6 @@
-package ac.id.ubaya.informatika.s160419137.todoapp
+package ac.id.ubaya.informatika.s160419137.todoapp.View
 
+import ac.id.ubaya.informatika.s160419137.todoapp.R
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 
