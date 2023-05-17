@@ -6,6 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import ac.id.ubaya.informatika.s160419137.todoapp.R
+import ac.id.ubaya.informatika.s160419137.todoapp.ViewModel.ToDoListViewModel
+import android.widget.TextView
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -18,17 +26,8 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class ToDoListFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var viewModel:ToDoListViewModel
+    private val todoListAdapter = ToDoListAdapter(arrayListOf())
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,23 +37,36 @@ class ToDoListFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_to_do_list, container, false)
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ToDoListFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ToDoListFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        var recViewTodo = view.findViewById<RecyclerView>(R.id.recViewToDo)
+        var fabAddTodo = view.findViewById<FloatingActionButton>(R.id.fabCreateToDo)
+
+
+        viewModel = ViewModelProvider(this).get(ToDoListViewModel::class.java)
+        viewModel.refresh()
+
+        recViewTodo.layoutManager = LinearLayoutManager(context)
+        recViewTodo.adapter = todoListAdapter
+
+        fabAddTodo.setOnClickListener {
+            val action = ToDoListFragmentDirections.actionCreateToDo()
+            Navigation.findNavController(it).navigate(action)
+        }
+
+        observeViewModel()
+    }
+
+    fun observeViewModel() {
+        viewModel.todoLD.observe(viewLifecycleOwner, Observer {
+            todoListAdapter.updateTodoList(it)
+            var txtEmpty = view?.findViewById<TextView>(R.id.txtEmpty)
+            if(it.isEmpty()) {
+                txtEmpty?.visibility = View.VISIBLE
+            } else {
+                txtEmpty?.visibility = View.GONE
             }
+        })
     }
 }
