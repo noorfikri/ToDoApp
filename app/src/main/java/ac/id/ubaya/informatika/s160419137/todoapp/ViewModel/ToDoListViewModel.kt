@@ -2,6 +2,7 @@ package ac.id.ubaya.informatika.s160419137.todoapp.ViewModel
 
 import ac.id.ubaya.informatika.s160419137.todoapp.Model.ToDoDatabase
 import ac.id.ubaya.informatika.s160419137.todoapp.Model.Todo
+import ac.id.ubaya.informatika.s160419137.todoapp.Util.buildDb
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
@@ -25,9 +26,11 @@ class ToDoListViewModel(application: Application) : AndroidViewModel(application
         loadingLD.value = true
         todoLoadErrorLD.value = false
         launch {
-            val db = Room.databaseBuilder(
+            val db = buildDb(getApplication())
+
+            /*val db = Room.databaseBuilder(
                 getApplication(),
-                ToDoDatabase::class.java, "newtododb").build()
+                ToDoDatabase::class.java, "newtododb").build()*/
             todoLD.postValue(db.todoDao().selectAllTodo())
         }
     }

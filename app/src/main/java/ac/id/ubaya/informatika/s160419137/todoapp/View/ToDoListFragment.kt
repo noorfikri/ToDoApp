@@ -27,7 +27,8 @@ private const val ARG_PARAM2 = "param2"
  */
 class ToDoListFragment : Fragment() {
     private lateinit var viewModel:ToDoListViewModel
-    private val todoListAdapter = ToDoListAdapter(arrayListOf())
+    private val todoListAdapter = ToDoListAdapter(arrayListOf(),{ item -> viewModel.clearTask(item) })
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

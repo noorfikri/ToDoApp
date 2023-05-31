@@ -10,6 +10,8 @@ import ac.id.ubaya.informatika.s160419137.todoapp.R
 import ac.id.ubaya.informatika.s160419137.todoapp.ViewModel.ToDoDetailViewModel
 import android.widget.Button
 import android.widget.EditText
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
@@ -44,12 +46,13 @@ class ToDoCreateFragment : Fragment() {
         btnCreate.setOnClickListener {
             val txtTitle = view.findViewById<TextInputEditText>(R.id.txtTitle)
             val txtNotes = view.findViewById<TextInputEditText>(R.id.txtNote)
+            var radioGroup = view.findViewById<RadioGroup>(R.id.radioGroupPriority)
+            var radioSelected = view.findViewById<RadioButton>(radioGroup.checkedRadioButtonId)
 
-            var todo = Todo(txtTitle.text.toString(), txtNotes.text.toString())
 
-            val list = listOf(todo)
+            var todo = Todo(txtTitle.text.toString(), txtNotes.text.toString(),radioSelected.tag.toString().toInt())
 
-            viewModel.addTodo(list)
+            viewModel.addTodo(todo)
 
             Toast.makeText(view.context, "Data added", Toast.LENGTH_LONG).show()
             Navigation.findNavController(it).popBackStack()
